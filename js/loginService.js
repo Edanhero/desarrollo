@@ -2,21 +2,30 @@ document.getElementById("formLogin").addEventListener("submit", function(e){
     e.preventDefault();
     const email=document.getElementById("email").value;
     const password = document.getElementById("password").value;
+    login(email, password)
+})
+
+function login(email,password){
     let message=""
     let alertType=""
-
-    if(email === "" || password === ""){
-        alertType="warning"
-        message="Por favor completa todos los campos."
-    }
-    else if(email === "prueba@gmail.com" && password === "123456"){
+    fetch("htpps://reqres.in/api/login",{
+        method: "POST", 
+        headers:{
+            "Content-type": "appication/json"
+        },
+        body:JSON.stringify({ email, password})
+    })
+    .then((data) =>{
         alertType="success"
         message="Bievenido"
-    }
-    else{
+        console.log("Responde bien" + data)
+    })
+    .catch((error) =>{
         alertType="danger"
         message="Correo o contraseña incorrectos."
-    }
+        console.error(error)
+    })
+
     let alert = `
         <div class="alert alert-${alertType} alert-dismissible fade show" role="alert">
             ${message}
@@ -26,6 +35,4 @@ document.getElementById("formLogin").addEventListener("submit", function(e){
 
     
     document.getElementById("alert").innerHTML= alert;
-
-
-})
+}
