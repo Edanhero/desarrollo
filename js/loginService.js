@@ -8,25 +8,41 @@ document.getElementById("formLogin").addEventListener("submit", function(e){
 function login(email,password){
     let message=""
     let alertType=""
-    fetch("htpps://reqres.in/api/login",{
+    localStorage.removeItem("token")
+    fetch("https://reqres.in/api/login",{
         method: "POST", 
         headers:{
-            "Content-type": "appication/json"
+            "Content-type": "application/json",
+            'x-api-key': 'reqres-free-v1'
         },
         body:JSON.stringify({ email, password})
     })
-    .then((data) =>{
-        alertType="success"
-        message="Bievenido"
-        console.log("Responde bien" + data)
+    .then((response) =>{
+        if(response.status === 200){
+            alertType="success"
+            message="Bievenido"
+            alertBuilder(alertType,message)
+            localStorage.setItem("token", "quepasomaster")
+            setTimeout(()=> {
+                location.href= "admin/dashboard.html"
+            }, 2000) 
+        }
+        else{
+            alertType="danger"
+            message="Correo o contraseña incorrectos."
+            alertBuilder(alertType,message)
+        }
     })
     .catch((error) =>{
         alertType="danger"
-        message="Correo o contraseña incorrectos."
+        message="Error inesperado"
         console.error(error)
+        alertBuilder(alertType,message)
     })
+}
 
-    let alert = `
+function alertBuilder(alertType, message){
+    const alert = `
         <div class="alert alert-${alertType} alert-dismissible fade show" role="alert">
             ${message}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
