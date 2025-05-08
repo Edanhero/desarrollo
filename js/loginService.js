@@ -22,7 +22,9 @@ function login(email,password){
             alertType="success"
             message="Bievenido"
             alertBuilder(alertType,message)
-            localStorage.setItem("token", "quepasomaster")
+            response.json().then((data)=> {
+                localStorage.setItem("token", data.token)
+            })
             setTimeout(()=> {
                 location.href= "admin/dashboard.html"
             }, 2000) 
